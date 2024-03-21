@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://cton2o3xsuut"]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_cxmrw"]
+[ext_resource type="Texture2D" uid="uid://bc674tv25vskc" path="res://icon.svg" id="1_mavuj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2hh02"]
+size = Vector2(93.375, 82.5)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_cxmrw")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(1, 1)
+scale = Vector2(0.6875, 0.664062)
+texture = ExtResource("1_mavuj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(4.3125, 0.75)
+shape = SubResource("RectangleShape2D_2hh02")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(11, 6)
+limit_left = 0
+limit_top = 100
+limit_bottom = 980
+editor_draw_limits = true
