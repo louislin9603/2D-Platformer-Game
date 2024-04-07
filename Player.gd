@@ -14,6 +14,7 @@ var max_jumps = 1
 
 # Attacking
 var attacking = false
+var enemy_in_range = false
 
 
 func _physics_process(delta):
@@ -34,8 +35,15 @@ func _physics_process(delta):
 	jump()
 	
 	# Stuff for attacking
-	if Input.is_action_just_pressed("ui_attack"):
+	if Input.is_action_pressed("ui_right"):
+		get_node("AttackArea").set_scale(Vector2(1, 1))
+	elif Input.is_action_pressed("ui_left"): 
+		get_node("AttackArea").set_scale(Vector2(-1, 1))
+	
+	if Input.is_action_pressed("ui_attack") and attacking == false:
 		attack()
+	else:
+		attacking = false
 	
 	# Coyote Timer - Checks if player is leaving ledge and about to jump
 	var was_on_floor = is_on_floor()
@@ -55,12 +63,23 @@ func jump():
 		jump_count = 0	
 
 func attack():
-	
-	var hit_list = $AttackArea.get_overlapping_bodies()
-	
-	for area in hit_list:
-		var parent = area.get_parent()
-		print(parent)
+		
 	attacking = true
 	
-	
+	if enemy_in_range == true and attacking == true:
+		var hit_list = $AttackArea.get_overlapping_areas()
+		for area in hit_list:
+			var parent = area.get_parent()
+			parent.queue_free()
+
+func _on_attack_area_body_entered(body):
+	# If a body enters player attack range
+	if body and body.name != "TileMap" and body.name != "Player":
+		print(body.name)
+		enemy_in_range = true
+		
+		
+func _on_attack_area_body_exited(body):
+	# If a body exits player attack range
+	if body and body.name != "TileMap" and body.name != "Player":
+		enemy_in_range = false

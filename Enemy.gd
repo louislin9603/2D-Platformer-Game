@@ -32,13 +32,14 @@ func _on_player_detection_body_entered(body):
 		chase = true
 		player = body		#The entity that just entered the detection range is the body (our player)
 
+
 func _on_player_detection_body_exited(body):
 	if body.name == "Player":
 		chase = false
 		
 func chase_player():
 	$Sprite2D.modulate = Color(1, 0, 0)		#Red for angry
-	var direction = (player.global_position - self.global_position).normalized()
+	direction = (player.global_position - self.global_position).normalized()
 	velocity.x = direction.x * chase_speed
 
 func idle_ai():
@@ -51,6 +52,5 @@ func idle_ai():
 		direction.x *= -1  
 		velocity.x = speed * direction.x 
 	velocity.x = speed * direction.x 
-		
-
+	
 
