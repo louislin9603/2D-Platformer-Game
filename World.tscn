@@ -1623,7 +1623,7 @@ texture = ExtResource("1_d8v6w")
 metadata/_edit_lock_ = true
 
 [node name="Background2" type="Sprite2D" parent="BG/ParallaxLayer"]
-position = Vector2(2490, 489)
+position = Vector2(2485, 493)
 scale = Vector2(1.78933, 1.23045)
 texture = ExtResource("1_d8v6w")
 metadata/_edit_lock_ = true

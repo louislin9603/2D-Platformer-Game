@@ -29,16 +29,24 @@ limit_top = 100
 limit_bottom = 980
 editor_draw_limits = true
 
-[node name="CoyoteJump" type="Timer" parent="."]
-wait_time = 0.2
-one_shot = true
-
 [node name="AttackArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
 position = Vector2(31, 0)
 shape = SubResource("CircleShape2D_be8tp")
 
+[node name="DashTimer" type="Timer" parent="."]
+wait_time = 0.2
+
+[node name="DashAgainTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="CoyoteJump" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
 [connection signal="area_entered" from="AttackArea" to="." method="_on_attack_area_area_entered"]
 [connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
 [connection signal="body_exited" from="AttackArea" to="." method="_on_attack_area_body_exited"]
+[connection signal="timeout" from="DashTimer" to="." method="_on_dash_timer_timeout"]
+[connection signal="timeout" from="DashAgainTimer" to="." method="_on_dash_again_timer_timeout"]

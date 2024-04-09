@@ -17,6 +17,14 @@ var max_jumps = 1
 var attacking = false
 var enemy_in_range = false
 
+# Dashing
+var dashing = false
+var dash_speed = 1000
+var dash_duration = 0.2
+var can_dash = true
+@onready var dash_timer = $DashTimer
+@onready var can_dash_timer = $DashAgainTimer      #1 sec CD
+
 
 func _physics_process(delta):
 	
@@ -29,6 +37,13 @@ func _physics_process(delta):
 	
 	# Stuff for jumping
 	jump()
+	
+	# Stuff for dashing
+	if Input.is_action_just_pressed("ui_dash") and can_dash:
+		dashing = true
+		can_dash = false
+		dash_timer.start()
+		can_dash_timer.start()
 	
 	# Stuff for attacking
 	if Input.is_action_pressed("ui_right"):
@@ -54,16 +69,23 @@ func movement():
 	
 	# Move based on direction (value 1 for right, -1 for left)
 	if direction:
-		velocity.x = direction * SPEED
-	elif is_on_floor(): # Idle
+		if dashing:
+			var dash_direction = Vector2.ZERO
+			if Input.is_action_pressed("ui_right"):
+				dash_direction.x += 1
+			if Input.is_action_pressed("ui_left"):
+				dash_direction.x -= 1
+			velocity = dash_direction.normalized() * dash_speed
+		else:
+			velocity.x = direction * SPEED
+	else: # Idle
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 	
 	# Fall down one way platforms
 	if Input.is_action_pressed("ui_down") and is_on_floor():
 		position.y += 1
-		
-		
-		
+
+
 func jump():
 	# Handle jump.
 	if Input.is_action_just_pressed("ui_select") and jump_count < max_jumps:
@@ -96,5 +118,13 @@ func _on_attack_area_body_exited(body):
 	# If a body exits player attack range
 	if body and body.name != "TileMap" and body.name != "Player":
 		enemy_in_range = false
-		
 
+
+# Make it stop dashing
+func _on_dash_timer_timeout():
+	dashing = false
+
+# Allow dash again
+func _on_dash_again_timer_timeout():
+	can_dash = true
+	print("Can dash again")
