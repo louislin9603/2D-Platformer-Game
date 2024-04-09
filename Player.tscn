@@ -27,7 +27,6 @@ zoom = Vector2(1.8, 1.8)
 limit_left = 0
 limit_top = 100
 limit_bottom = 980
-position_smoothing_enabled = true
 editor_draw_limits = true
 
 [node name="CoyoteJump" type="Timer" parent="."]

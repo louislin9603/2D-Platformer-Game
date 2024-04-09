@@ -4,6 +4,7 @@ extends CharacterBody2D
 const SPEED = 200.0
 const JUMP_VELOCITY = -450.0
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+var platform_velocity = Vector2.ZERO
 
 # Double Jump
 var jump_count = 0
@@ -18,18 +19,13 @@ var enemy_in_range = false
 
 
 func _physics_process(delta):
+	
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	
-	# Get direction of user input.
-	var direction = Input.get_axis("ui_left", "ui_right")
-	
-	# Move based on direction (value 1 for right, -1 for left)
-	if direction:
-		velocity.x = direction * SPEED
-	else: # Idle
-		velocity.x = move_toward(velocity.x, 0, SPEED)
+	# Stuff for moving
+	movement()
 	
 	# Stuff for jumping
 	jump()
@@ -51,7 +47,23 @@ func _physics_process(delta):
 	var just_left_ledge = was_on_floor and not is_on_floor() and velocity.y >= 0
 	if just_left_ledge:
 		coyote_timer.start()
-
+	
+func movement():
+	# Get direction of user input.
+	var direction = Input.get_axis("ui_left", "ui_right")
+	
+	# Move based on direction (value 1 for right, -1 for left)
+	if direction:
+		velocity.x = direction * SPEED
+	elif is_on_floor(): # Idle
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+	
+	# Fall down one way platforms
+	if Input.is_action_pressed("ui_down") and is_on_floor():
+		position.y += 1
+		
+		
+		
 func jump():
 	# Handle jump.
 	if Input.is_action_just_pressed("ui_select") and jump_count < max_jumps:
@@ -60,7 +72,8 @@ func jump():
 
 	#Reset jump count after falling down
 	if is_on_floor() or coyote_timer.time_left > 0.0:
-		jump_count = 0	
+		jump_count = 0
+	
 
 func attack():
 		
@@ -83,3 +96,5 @@ func _on_attack_area_body_exited(body):
 	# If a body exits player attack range
 	if body and body.name != "TileMap" and body.name != "Player":
 		enemy_in_range = false
+		
+
