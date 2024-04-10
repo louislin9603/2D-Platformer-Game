@@ -32,7 +32,6 @@ func _on_player_detection_body_entered(body):
 		chase = true
 		player = body		#The entity that just entered the detection range is the body (our player)
 
-
 func _on_player_detection_body_exited(body):
 	if body.name == "Player":
 		chase = false

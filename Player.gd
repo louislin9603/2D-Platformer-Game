@@ -17,6 +17,14 @@ var max_jumps = 1
 var attacking = false
 var enemy_in_range = false
 
+# Shooting
+@onready var bulletPath = preload('res://Bullet.tscn')
+var shooting = false
+var bullet_direction
+
+# Death
+var dead = false
+
 # Dashing
 var dashing = false
 var dash_speed = 1000
@@ -38,6 +46,9 @@ func _physics_process(delta):
 	# Stuff for jumping
 	jump()
 	
+	if global_position.y > 985:
+		death()
+	
 	# Stuff for dashing
 	if Input.is_action_just_pressed("ui_dash") and can_dash:
 		dashing = true
@@ -48,13 +59,20 @@ func _physics_process(delta):
 	# Stuff for attacking
 	if Input.is_action_pressed("ui_right"):
 		get_node("AttackArea").set_scale(Vector2(1, 1))
+		$ShootArea.scale.x = 1
 	elif Input.is_action_pressed("ui_left"): 
 		get_node("AttackArea").set_scale(Vector2(-1, 1))
-	
+		$ShootArea.scale.x = -1
 	if Input.is_action_pressed("ui_attack") and attacking == false:
 		attack()
 	else:
 		attacking = false
+	
+	# Stuff for shooting
+	if Input.is_action_just_pressed("ui_shoot"):
+		shoot()
+	else:
+		shooting = false
 	
 	# Coyote Timer - Checks if player is leaving ledge and about to jump
 	var was_on_floor = is_on_floor()
@@ -107,10 +125,19 @@ func attack():
 			var parent = area.get_parent()
 			parent.queue_free()
 
+func shoot():
+	shooting = true
+	var bullet = bulletPath.instantiate()
+	
+	bullet.position = $ShootArea/Shoot.global_position 
+	bullet.velocity_placeholder = $ShootArea.scale.x
+	get_parent().add_child(bullet)
+		
+	
+
 func _on_attack_area_body_entered(body):
 	# If a body enters player attack range
 	if body and body.name != "TileMap" and body.name != "Player":
-		print(body.name)
 		enemy_in_range = true
 		
 		
@@ -118,6 +145,13 @@ func _on_attack_area_body_exited(body):
 	# If a body exits player attack range
 	if body and body.name != "TileMap" and body.name != "Player":
 		enemy_in_range = false
+		
+func death():
+	if not dead:
+		dead = true
+		velocity = Vector2.ZERO
+		print("dead")
+		get_tree().reload_current_scene()
 
 
 # Make it stop dashing
@@ -127,4 +161,3 @@ func _on_dash_timer_timeout():
 # Allow dash again
 func _on_dash_again_timer_timeout():
 	can_dash = true
-	print("Can dash again")

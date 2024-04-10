@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bc674tv25vskc" path="res://icon.svg" id="1_mavuj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2hh02"]
-size = Vector2(38.8438, 37)
+size = Vector2(40.4219, 38.5)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_be8tp"]
 radius = 17.0
@@ -18,7 +18,7 @@ scale = Vector2(0.328125, 0.308594)
 texture = ExtResource("1_mavuj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-1, -5)
+position = Vector2(-0.21095, -4.25)
 shape = SubResource("RectangleShape2D_2hh02")
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -44,6 +44,12 @@ wait_time = 2.0
 [node name="CoyoteJump" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
+
+[node name="ShootArea" type="Node2D" parent="."]
+position = Vector2(-1, -2)
+
+[node name="Shoot" type="Marker2D" parent="ShootArea"]
+position = Vector2(37, 0)
 
 [connection signal="area_entered" from="AttackArea" to="." method="_on_attack_area_area_entered"]
 [connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
