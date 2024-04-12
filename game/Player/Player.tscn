@@ -35,24 +35,30 @@ editor_draw_limits = true
 position = Vector2(31, 0)
 shape = SubResource("CircleShape2D_be8tp")
 
-[node name="DashTimer" type="Timer" parent="."]
-wait_time = 0.2
-
-[node name="DashAgainTimer" type="Timer" parent="."]
-wait_time = 2.0
-
-[node name="CoyoteJump" type="Timer" parent="."]
-wait_time = 0.2
-one_shot = true
-
 [node name="ShootArea" type="Node2D" parent="."]
 position = Vector2(-1, -2)
 
 [node name="Shoot" type="Marker2D" parent="ShootArea"]
 position = Vector2(37, 0)
 
+[node name="Timers" type="Node2D" parent="."]
+
+[node name="DashTimer" type="Timer" parent="Timers"]
+wait_time = 0.2
+
+[node name="DashAgainTimer" type="Timer" parent="Timers"]
+wait_time = 2.0
+
+[node name="CoyoteJump" type="Timer" parent="Timers"]
+wait_time = 0.2
+one_shot = true
+
+[node name="ShootTimer" type="Timer" parent="Timers"]
+wait_time = 0.4
+
 [connection signal="area_entered" from="AttackArea" to="." method="_on_attack_area_area_entered"]
 [connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
 [connection signal="body_exited" from="AttackArea" to="." method="_on_attack_area_body_exited"]
-[connection signal="timeout" from="DashTimer" to="." method="_on_dash_timer_timeout"]
-[connection signal="timeout" from="DashAgainTimer" to="." method="_on_dash_again_timer_timeout"]
+[connection signal="timeout" from="Timers/DashTimer" to="." method="_on_dash_timer_timeout"]
+[connection signal="timeout" from="Timers/DashAgainTimer" to="." method="_on_dash_again_timer_timeout"]
+[connection signal="timeout" from="Timers/ShootTimer" to="." method="_on_shoot_timer_timeout"]

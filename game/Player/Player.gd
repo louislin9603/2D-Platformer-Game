@@ -11,7 +11,7 @@ var jump_count = 0
 var max_jumps = 1
 
 # Coyote Timer
-@onready var coyote_timer = $CoyoteJump
+@onready var coyote_timer = $Timers/CoyoteJump
 
 # Attacking
 var attacking = false
@@ -19,7 +19,9 @@ var enemy_in_range = false
 
 # Shooting
 @onready var bulletPath = preload("res://game/Player/Bullet.tscn")
+@onready var shoot_timer = $Timers/ShootTimer
 var shooting = false
+var can_shoot = true
 var bullet_direction
 
 # Death
@@ -30,8 +32,8 @@ var dashing = false
 var dash_speed = 1000
 var dash_duration = 0.2
 var can_dash = true
-@onready var dash_timer = $DashTimer
-@onready var can_dash_timer = $DashAgainTimer      #1 sec CD
+@onready var dash_timer = $Timers/DashTimer
+@onready var can_dash_timer = $Timers/DashAgainTimer     #1 sec CD
 
 
 func _physics_process(delta):
@@ -69,8 +71,9 @@ func _physics_process(delta):
 		attacking = false
 	
 	# Stuff for shooting
-	if Input.is_action_just_pressed("ui_shoot"):
+	if Input.is_action_just_pressed("ui_shoot") and can_shoot:
 		shoot()
+		shoot_timer.start()
 	else:
 		shooting = false
 	
@@ -87,7 +90,7 @@ func movement():
 	
 	# Move based on direction (value 1 for right, -1 for left)
 	if direction:
-		if dashing:
+		if dashing:          #Dash mechanic
 			var dash_direction = Vector2.ZERO
 			if Input.is_action_pressed("ui_right"):
 				dash_direction.x += 1
@@ -116,7 +119,7 @@ func jump():
 	
 
 func attack():
-		
+	
 	attacking = true
 	
 	if enemy_in_range == true and attacking == true:
@@ -132,7 +135,8 @@ func shoot():
 	bullet.position = $ShootArea/Shoot.global_position 
 	bullet.velocity_placeholder = $ShootArea.scale.x
 	get_parent().add_child(bullet)
-		
+	
+	can_shoot = false
 	
 
 func _on_attack_area_body_entered(body):
@@ -153,7 +157,6 @@ func death():
 		print("dead")
 		get_tree().reload_current_scene()
 
-
 # Make it stop dashing
 func _on_dash_timer_timeout():
 	dashing = false
@@ -161,3 +164,7 @@ func _on_dash_timer_timeout():
 # Allow dash again
 func _on_dash_again_timer_timeout():
 	can_dash = true
+
+# Allow shoot again
+func _on_shoot_timer_timeout():
+	can_shoot = true
