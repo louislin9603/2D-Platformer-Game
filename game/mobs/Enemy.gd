@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 
-var speed = 50.0
+var speed = 40.0
 const JUMP_VELOCITY = -400.0
 
 # Enemy AI variables

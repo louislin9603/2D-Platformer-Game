@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://dlaintcs5s47h"]
+
+[ext_resource type="Texture2D" uid="uid://bc674tv25vskc" path="res://game/assets/icon.svg" id="1_1iulo"]
+[ext_resource type="Script" path="res://SlimeBoss.gd" id="1_85cve"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c6rh8"]
+size = Vector2(43.4852, 42.1488)
+
+[node name="SlimeBoss" type="CharacterBody2D"]
+script = ExtResource("1_85cve")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1.90735e-06, 0)
+scale = Vector2(1.85156, 1.67969)
+shape = SubResource("RectangleShape2D_c6rh8")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 0.999999)
+scale = Vector2(0.611816, 0.570801)
+texture = ExtResource("1_1iulo")
+
+[node name="JumpTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[connection signal="timeout" from="JumpTimer" to="." method="_on_jump_timer_timeout"]
