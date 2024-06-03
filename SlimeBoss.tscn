@@ -1,13 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://dlaintcs5s47h"]
+[gd_scene load_steps=5 format=3 uid="uid://dlaintcs5s47h"]
 
 [ext_resource type="Texture2D" uid="uid://bc674tv25vskc" path="res://game/assets/icon.svg" id="1_1iulo"]
 [ext_resource type="Script" path="res://SlimeBoss.gd" id="1_85cve"]
+[ext_resource type="PackedScene" uid="uid://c2eyaos2ibwsw" path="res://Healthbar.tscn" id="3_xgj6t"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c6rh8"]
 size = Vector2(43.4852, 42.1488)
 
 [node name="SlimeBoss" type="CharacterBody2D"]
+slide_on_ceiling = false
 script = ExtResource("1_85cve")
+
+[node name="Collision" type="Area2D" parent="."]
+position = Vector2(-1.90735e-06, 0)
+scale = Vector2(1.85156, 1.67969)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision"]
+shape = SubResource("RectangleShape2D_c6rh8")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-1.90735e-06, 0)
@@ -21,5 +30,22 @@ texture = ExtResource("1_1iulo")
 
 [node name="JumpTimer" type="Timer" parent="."]
 wait_time = 2.0
+
+[node name="Label" type="Label" parent="."]
+offset_left = -100.0
+offset_top = -76.0
+offset_right = 95.0
+offset_bottom = -53.0
+text = "Gloopy"
+horizontal_alignment = 1
+
+[node name="Healthbar" parent="." instance=ExtResource("3_xgj6t")]
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -46.0
+offset_top = -51.0
+offset_right = 51.0
+offset_bottom = -38.0
 
 [connection signal="timeout" from="JumpTimer" to="." method="_on_jump_timer_timeout"]

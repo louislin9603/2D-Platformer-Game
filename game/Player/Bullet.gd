@@ -20,7 +20,8 @@ func _on_hit_detector_body_entered(body):
 	# If bullet hits an enemy in group "Enemy"
 	if body.is_in_group("Enemy"):
 		self.queue_free()
-		body.queue_free()
+		body.take_damage(1)
+		print(body.health)
 	
 	# If bullet hits terrain defined above, disappear
 	if body.name in terrain:

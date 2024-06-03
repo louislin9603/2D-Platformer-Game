@@ -1,6 +1,5 @@
-[gd_scene load_steps=18 format=3 uid="uid://c101wr3d2k11o"]
+[gd_scene load_steps=15 format=3 uid="uid://c101wr3d2k11o"]
 
-[ext_resource type="Script" path="res://Main.gd" id="1_3jmop"]
 [ext_resource type="Texture2D" uid="uid://b3sdvlj42j812" path="res://game/assets/Free Pixel Art Forest/Preview/Background.png" id="1_d8v6w"]
 [ext_resource type="PackedScene" uid="uid://cton2o3xsuut" path="res://game/Player/Player.tscn" id="2_wm6vy"]
 [ext_resource type="Texture2D" uid="uid://3aku4212wkyd" path="res://game/assets/Legacy-Fantasy - High Forest 2.3/Assets/Tiles.png" id="4_smswu"]
@@ -8,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dw5pm765s3tq8" path="res://game/environment/MovingPlatform.tscn" id="6_4j1m3"]
 [ext_resource type="PackedScene" uid="uid://ckba06pfxm5ld" path="res://game/environment/BrokenPlatform.tscn" id="7_m1hxw"]
 [ext_resource type="PackedScene" uid="uid://dyr06wqqs0gcm" path="res://game/environment/Spikes.tscn" id="8_0yvh7"]
-[ext_resource type="Script" path="res://HealthBar.gd" id="9_pkb2i"]
+[ext_resource type="Script" path="res://Main.gd" id="9_pkb2i"]
 [ext_resource type="PackedScene" uid="uid://dlaintcs5s47h" path="res://SlimeBoss.tscn" id="10_28un0"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xxb6c"]
@@ -1598,32 +1597,21 @@ texture = ExtResource("4_smswu")
 9:5/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 9:5/0/physics_layer_0/angular_velocity = 0.0
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_gt817"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sbsim"]
+texture = SubResource("CompressedTexture2D_gt817")
+
 [sub_resource type="TileSet" id="TileSet_lq5w0"]
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_xxb6c")
+sources/1 = SubResource("TileSetAtlasSource_sbsim")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0m40a"]
 size = Vector2(0.9927, 0.746109)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gwl7x"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6jq0h"]
-bg_color = Color(0, 0.529412, 0.101961, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cr84l"]
-bg_color = Color(0.360784, 0.294118, 0.266667, 1)
-expand_margin_left = 1.0
-expand_margin_top = 1.0
-expand_margin_right = 1.0
-expand_margin_bottom = 1.0
-shadow_color = Color(0.780392, 0, 0, 0.6)
-shadow_offset = Vector2(0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_thnk1"]
-bg_color = Color(0.772549, 0, 0.0313726, 1)
-
 [node name="World" type="Node2D"]
-script = ExtResource("1_3jmop")
+script = ExtResource("9_pkb2i")
 
 [node name="BG" type="ParallaxBackground" parent="."]
 
@@ -1657,18 +1645,21 @@ metadata/_edit_lock_ = true
 [node name="Player" type="Node2D" parent="."]
 
 [node name="Player" parent="Player" instance=ExtResource("2_wm6vy")]
-position = Vector2(3979, 764)
+position = Vector2(149, 826)
 
 [node name="Mobs" type="Node2D" parent="."]
 
-[node name="Enemy" parent="Mobs" groups=["Enemy"] instance=ExtResource("5_sepmp")]
+[node name="Enemy" parent="Mobs" instance=ExtResource("5_sepmp")]
 position = Vector2(894, 636)
 
-[node name="Enemy2" parent="Mobs" groups=["Enemy"] instance=ExtResource("5_sepmp")]
+[node name="Enemy2" parent="Mobs" instance=ExtResource("5_sepmp")]
 position = Vector2(517, 762)
 
-[node name="Enemy3" parent="Mobs" groups=["Enemy"] instance=ExtResource("5_sepmp")]
+[node name="Enemy3" parent="Mobs" instance=ExtResource("5_sepmp")]
 position = Vector2(1565, 896)
+
+[node name="SlimeBoss" parent="Mobs" groups=["Enemy"] instance=ExtResource("10_28un0")]
+position = Vector2(4282, 748)
 
 [node name="TileMap" type="TileMap" parent="." groups=["Environment"]]
 tile_set = SubResource("TileSet_lq5w0")
@@ -1769,37 +1760,4 @@ position = Vector2(972, 171)
 [node name="Spikes6" parent="Environment/Spikes" instance=ExtResource("8_0yvh7")]
 position = Vector2(1082, 108)
 
-[node name="UserInterface" type="CanvasLayer" parent="."]
-
-[node name="HealthBar" type="ProgressBar" parent="UserInterface"]
-z_index = 1
-offset_left = 19.0
-offset_top = 20.0
-offset_right = 175.0
-offset_bottom = 47.0
-theme_override_styles/background = SubResource("StyleBoxEmpty_gwl7x")
-theme_override_styles/fill = SubResource("StyleBoxFlat_6jq0h")
-value = 60.0
-script = ExtResource("9_pkb2i")
-
-[node name="DamageBar" type="ProgressBar" parent="UserInterface/HealthBar"]
-z_index = -1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_cr84l")
-theme_override_styles/fill = SubResource("StyleBoxFlat_thnk1")
-value = 80.0
-show_percentage = false
-
-[node name="Timer" type="Timer" parent="UserInterface/HealthBar"]
-wait_time = 0.2
-
-[node name="SlimeBoss" parent="." instance=ExtResource("10_28un0")]
-position = Vector2(4282, 748)
-
 [connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
-[connection signal="timeout" from="UserInterface/HealthBar/Timer" to="UserInterface/HealthBar" method="_on_timer_timeout"]

@@ -1,10 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://cton2o3xsuut"]
+[gd_scene load_steps=7 format=3 uid="uid://cton2o3xsuut"]
 
 [ext_resource type="Script" path="res://game/Player/Player.gd" id="1_cxmrw"]
 [ext_resource type="Texture2D" uid="uid://bc674tv25vskc" path="res://game/assets/icon.svg" id="1_mavuj"]
+[ext_resource type="PackedScene" uid="uid://c2eyaos2ibwsw" path="res://Healthbar.tscn" id="3_pwmiq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2hh02"]
-size = Vector2(40.4219, 38.5)
+size = Vector2(47, 41)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hy5vs"]
+radius = 21.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_be8tp"]
 radius = 17.0
@@ -18,12 +22,21 @@ scale = Vector2(0.328125, 0.308594)
 texture = ExtResource("1_mavuj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(-0.21095, -4.25)
 shape = SubResource("RectangleShape2D_2hh02")
 
+[node name="Hurtbox" type="Area2D" parent="."]
+position = Vector2(-0.21095, -4.25)
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0.21095, 1.25)
+shape = SubResource("CircleShape2D_hy5vs")
+
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(11, 6)
-zoom = Vector2(1.8, 1.8)
+zoom = Vector2(2.8, 2.8)
 limit_left = 0
 limit_top = 100
 limit_bottom = 980
@@ -56,9 +69,25 @@ one_shot = true
 [node name="ShootTimer" type="Timer" parent="Timers"]
 wait_time = 0.4
 
+[node name="AttackTimer" type="Timer" parent="Timers"]
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Healthbar" parent="UI" instance=ExtResource("3_pwmiq")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 18.0
+offset_top = 23.0
+offset_right = 570.0
+offset_bottom = 60.0
+grow_horizontal = 1
+grow_vertical = 1
+
 [connection signal="area_entered" from="AttackArea" to="." method="_on_attack_area_area_entered"]
 [connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
 [connection signal="body_exited" from="AttackArea" to="." method="_on_attack_area_body_exited"]
 [connection signal="timeout" from="Timers/DashTimer" to="." method="_on_dash_timer_timeout"]
 [connection signal="timeout" from="Timers/DashAgainTimer" to="." method="_on_dash_again_timer_timeout"]
 [connection signal="timeout" from="Timers/ShootTimer" to="." method="_on_shoot_timer_timeout"]
+[connection signal="timeout" from="Timers/AttackTimer" to="." method="_on_attack_timer_timeout"]
